@@ -1,0 +1,46 @@
+@import 'tailwindcss';
+
+/* Dark mode piloté par la classe .dark sur <html> */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+html {
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  @apply bg-slate-50 text-slate-900 antialiased dark:bg-slate-950 dark:text-slate-100;
+}
+
+/* Transitions de route */
+@keyframes page-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.page-enter {
+  animation: page-in 280ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+/* Feuille modale (bottom sheet) */
+@keyframes sheet-in {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.sheet-enter { animation: sheet-in 260ms cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.backdrop-enter { animation: fade-in 200ms ease-out both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .page-enter, .sheet-enter, .backdrop-enter { animation: none; }
+}
+
+.pb-safe { padding-bottom: env(safe-area-inset-bottom); }
+
+/* Recharts : retirer le contour de focus sur les secteurs */
+.recharts-wrapper *:focus { outline: none; }
