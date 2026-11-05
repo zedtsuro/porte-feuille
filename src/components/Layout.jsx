@@ -27,11 +27,14 @@ export default function Layout() {
   return (
     <div className="mx-auto min-h-dvh max-w-2xl">
       <header className="sticky top-0 z-30 flex items-center justify-between bg-slate-50/80 px-4 pt-[max(env(safe-area-inset-top),0.75rem)] pb-3 backdrop-blur-lg dark:bg-slate-950/80">
-        <div>
-          <p className="text-xs font-medium text-slate-500 dark:text-slate-400">
-            👛 Porte-feuille {mode === 'local' && <span className="ml-1 rounded-full bg-amber-100 px-1.5 py-0.5 text-[10px] text-amber-700 dark:bg-amber-500/15 dark:text-amber-300">démo locale</span>}
-          </p>
-          <h1 className="text-xl font-bold">{TITLES[location.pathname] ?? 'Porte-feuille'}</h1>
+        <div className="flex items-center gap-3">
+          <img src={`${import.meta.env.BASE_URL}logo.svg`} alt="" className="h-10 w-10 shrink-0 rounded-xl shadow-md shadow-indigo-600/30" />
+          <div>
+            <p className="text-xs font-medium text-slate-500 dark:text-slate-400">
+              Porte-feuille {mode === 'local' && <span className="ml-1 rounded-full bg-amber-100 px-1.5 py-0.5 text-[10px] text-amber-700 dark:bg-amber-500/15 dark:text-amber-300">démo locale</span>}
+            </p>
+            <h1 className="text-xl font-bold">{TITLES[location.pathname] ?? 'Porte-feuille'}</h1>
+          </div>
         </div>
         <button
           onClick={toggle}

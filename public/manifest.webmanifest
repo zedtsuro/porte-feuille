@@ -1,0 +1,11 @@
+{
+  "name": "Porte-feuille",
+  "short_name": "Porte-feuille",
+  "description": "Portefeuille virtuel et gestion multi-budgets",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "background_color": "#020617",
+  "theme_color": "#4f46e5",
+  "icons": [{ "src": "logo.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}
