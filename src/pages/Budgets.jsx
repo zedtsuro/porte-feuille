@@ -26,7 +26,7 @@ export default function Budgets() {
     <div className="space-y-6">
       <button
         onClick={() => setForm({})}
-        className="flex w-full items-center justify-center gap-2 rounded-3xl border-2 border-dashed border-slate-300 py-4 font-semibold text-slate-500 transition hover:border-indigo-500 hover:text-indigo-600 dark:border-slate-700 dark:text-slate-400"
+        className="flex w-full items-center justify-center gap-2 rounded-3xl border-2 border-dashed border-slate-300 py-4 font-semibold lg:w-auto lg:px-8 text-slate-500 transition hover:border-indigo-500 hover:text-indigo-600 dark:border-slate-700 dark:text-slate-400"
       >
         <PlusIcon className="h-5 w-5" /> Nouveau budget
       </button>
@@ -36,7 +36,7 @@ export default function Budgets() {
         {goals.length === 0 ? (
           <Empty text="Créez un objectif (ex : Projet Vacances) et alimentez-le depuis vos transactions." />
         ) : (
-          <div className="space-y-3">
+          <div className="grid gap-3 md:grid-cols-2 lg:gap-5 2xl:grid-cols-3">
             {goals.map((b) => (
               <BudgetCard
                 key={b.id}
@@ -57,7 +57,7 @@ export default function Budgets() {
         {envelopes.length === 0 ? (
           <Empty text="Fixez un plafond mensuel par catégorie (ex : 400 € d'Alimentation)." />
         ) : (
-          <div className="space-y-3">
+          <div className="grid gap-3 md:grid-cols-2 lg:gap-5 2xl:grid-cols-3">
             {envelopes.map((b) => (
               <BudgetCard
                 key={b.id}

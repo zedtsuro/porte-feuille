@@ -98,85 +98,89 @@ export default function Transactions() {
   const budgetName = (id) => budgets.find((b) => b.id === id)?.name;
 
   return (
-    <div className="space-y-4">
-      {/* Filtres */}
-      <div className="space-y-3">
-        <input type="search" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Rechercher…" className={inputCls} />
-        <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none]">
-          {PERIODS.map((p) => (
-            <button
-              key={p.value}
-              onClick={() => setFilter('period', p.value, 'all')}
-              className={`shrink-0 rounded-full border px-3.5 py-1.5 text-sm font-medium transition ${
-                period === p.value
-                  ? 'border-indigo-600 bg-indigo-600 text-white'
-                  : 'border-slate-200 bg-white text-slate-600 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300'
-              }`}
-            >
-              {p.label}
-            </button>
-          ))}
-        </div>
-        <div className="grid grid-cols-[1fr_auto] gap-2 sm:grid-cols-2">
-          <Segmented
-            value={type}
-            onChange={(v) => setFilter('type', v, 'all')}
-            options={[
-              { value: 'all', label: 'Tous' },
-              { value: 'income', label: 'Entrées', activeClass: 'text-emerald-600 dark:text-emerald-400' },
-              { value: 'expense', label: 'Sorties', activeClass: 'text-rose-600 dark:text-rose-400' },
-            ]}
-          />
-          <select value={category} onChange={(e) => setFilter('category', e.target.value, '')} className={`${inputCls} py-2 text-sm`} aria-label="Catégorie">
-            <option value="">Catégorie</option>
-            {categoryOptions.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.icon} {c.id}
-              </option>
+    <div className="space-y-4 lg:grid lg:grid-cols-[300px_minmax(0,1fr)] lg:items-start lg:gap-6 lg:space-y-0">
+      {/* Filtres + synthèse : colonne fixe sur PC */}
+      <aside className="space-y-4 lg:sticky lg:top-28">
+        <div className="space-y-3">
+          <input type="search" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Rechercher…" className={inputCls} />
+          <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] lg:mx-0 lg:flex-wrap lg:overflow-visible lg:px-0">
+            {PERIODS.map((p) => (
+              <button
+                key={p.value}
+                onClick={() => setFilter('period', p.value, 'all')}
+                className={`shrink-0 rounded-full border px-3.5 py-1.5 text-sm font-medium transition ${
+                  period === p.value
+                    ? 'border-indigo-600 bg-indigo-600 text-white'
+                    : 'border-slate-200 bg-white text-slate-600 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300'
+                }`}
+              >
+                {p.label}
+              </button>
             ))}
-          </select>
+          </div>
+          <div className="grid grid-cols-[1fr_auto] gap-2 sm:grid-cols-2 lg:grid-cols-1">
+            <Segmented
+              value={type}
+              onChange={(v) => setFilter('type', v, 'all')}
+              options={[
+                { value: 'all', label: 'Tous' },
+                { value: 'income', label: 'Entrées', activeClass: 'text-emerald-600 dark:text-emerald-400' },
+                { value: 'expense', label: 'Sorties', activeClass: 'text-rose-600 dark:text-rose-400' },
+              ]}
+            />
+            <select value={category} onChange={(e) => setFilter('category', e.target.value, '')} className={`${inputCls} py-2 text-sm`} aria-label="Catégorie">
+              <option value="">Catégorie</option>
+              {categoryOptions.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.icon} {c.id}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
-      </div>
-
-      {/* Synthèse de la sélection */}
-      <div className="grid grid-cols-3 gap-2 text-center">
-        <Summary label="Entrées" value={totals.income} className="text-emerald-600 dark:text-emerald-400" />
-        <Summary label="Sorties" value={totals.expense} className="text-rose-600 dark:text-rose-400" />
-        <Summary label="Net" value={totals.income - totals.expense} />
-      </div>
-
-      {status === 'loading' ? (
-        <Skeleton className="h-96 rounded-3xl" />
-      ) : filtered.length === 0 ? (
-        <Card className="py-12 text-center text-sm text-slate-500">Aucune transaction ne correspond à ces filtres.</Card>
-      ) : (
-        <div className="space-y-4">
-          {groups.map((g) => (
-            <section key={g.date}>
-              <h3 className="mb-1 px-2 text-xs font-semibold tracking-wide text-slate-400 uppercase">{formatDayLabel(g.date)}</h3>
-              <Card className="p-2">
-                {g.items.map((t) => (
-                  <TransactionItem key={t.id} tx={t} budgetName={budgetName(t.budget_id)} onClick={() => openTx(t)} />
-                ))}
-              </Card>
-            </section>
-          ))}
-          {hasMore ? (
-            <div ref={sentinel} className="py-4 text-center text-sm text-slate-400">Chargement…</div>
-          ) : (
-            <p className="py-4 text-center text-xs text-slate-400">{filtered.length} transaction{filtered.length > 1 ? 's' : ''}</p>
-          )}
+  
+        {/* Synthèse de la sélection */}
+        <div className="grid grid-cols-3 gap-2 text-center lg:grid-cols-1 lg:text-left">
+          <Summary label="Entrées" value={totals.income} className="text-emerald-600 dark:text-emerald-400" />
+          <Summary label="Sorties" value={totals.expense} className="text-rose-600 dark:text-rose-400" />
+          <Summary label="Net" value={totals.income - totals.expense} />
         </div>
-      )}
+      </aside>
+
+      <div>
+        {status === 'loading' ? (
+          <Skeleton className="h-96 rounded-3xl" />
+        ) : filtered.length === 0 ? (
+          <Card className="py-12 text-center text-sm text-slate-500">Aucune transaction ne correspond à ces filtres.</Card>
+        ) : (
+          <div className="space-y-4">
+            {groups.map((g) => (
+              <section key={g.date}>
+                <h3 className="mb-1 px-2 text-xs font-semibold tracking-wide text-slate-400 uppercase">{formatDayLabel(g.date)}</h3>
+                <Card className="p-2">
+                  {g.items.map((t) => (
+                    <TransactionItem key={t.id} tx={t} budgetName={budgetName(t.budget_id)} onClick={() => openTx(t)} />
+                  ))}
+                </Card>
+              </section>
+            ))}
+            {hasMore ? (
+              <div ref={sentinel} className="py-4 text-center text-sm text-slate-400">Chargement…</div>
+            ) : (
+              <p className="py-4 text-center text-xs text-slate-400">{filtered.length} transaction{filtered.length > 1 ? 's' : ''}</p>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
 
 function Summary({ label, value, className = '' }) {
   return (
-    <Card className="px-2 py-3">
-      <p className="text-[11px] font-medium text-slate-500 uppercase">{label}</p>
-      <p className={`mt-0.5 truncate text-sm font-bold tabular-nums ${className}`}>{formatMoney(value)}</p>
+    <Card className="px-2 py-3 lg:flex lg:items-center lg:justify-between lg:px-4">
+      <p className="text-[11px] font-medium text-slate-500 uppercase lg:text-xs">{label}</p>
+      <p className={`mt-0.5 truncate text-sm font-bold tabular-nums lg:mt-0 lg:text-base ${className}`}>{formatMoney(value)}</p>
     </Card>
   );
 }

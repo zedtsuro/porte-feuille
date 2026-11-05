@@ -9,6 +9,8 @@ npm install
 npm run dev
 ```
 
+`npm run dev:demo` force le mode démo même si Supabase est configuré. `npm run deploy` publie sur GitHub Pages (à lancer depuis PowerShell ou cmd).
+
 Sans configuration, l'app tourne en **mode démo locale** : les données sont dans le `localStorage`, pré-remplies avec deux mois d'exemples, et synchronisées en direct entre les onglets.
 
 ## Brancher Supabase (temps réel)
@@ -26,6 +28,7 @@ Sans configuration, l'app tourne en **mode démo locale** : les données sont da
 - **Budgets** :
   - *Objectifs* (ex. Projet Vacances) : progressent avec les transactions qui leur sont liées (« Alimenter »).
   - *Enveloppes* (ex. Courses 400 €/mois) : se consomment avec les dépenses du mois de la catégorie suivie ; passent en rouge en cas de dépassement.
+- Responsive : nav basse + bouton « + » au pouce sur smartphone ; barre latérale, grilles multi-colonnes et raccourci clavier `N` sur PC.
 - Mode sombre (préférence système par défaut, bascule mémorisée), transitions de route et animations des graphiques.
 
 ## Structure

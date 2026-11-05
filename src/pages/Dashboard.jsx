@@ -31,23 +31,21 @@ export default function Dashboard() {
   const budgetName = (id) => budgets.find((b) => b.id === id)?.name;
 
   return (
-    <div className="space-y-4">
+    <div className="grid grid-cols-2 gap-3 lg:gap-5 xl:grid-cols-3">
       {/* Solde */}
-      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-600 via-indigo-600 to-violet-600 p-6 text-white shadow-xl shadow-indigo-600/20">
+      <section className="relative col-span-2 overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-600 via-indigo-600 to-violet-600 p-6 text-white shadow-xl shadow-indigo-600/20 xl:col-span-1">
         <div className="absolute -top-16 -right-16 h-48 w-48 rounded-full bg-white/10 blur-2xl" />
         <p className="text-sm font-medium text-indigo-100">Solde disponible</p>
-        <p className="mt-1 text-4xl font-bold tracking-tight tabular-nums sm:text-5xl">{formatMoney(stats.balance)}</p>
+        <p className="mt-1 text-4xl font-bold tracking-tight tabular-nums sm:text-5xl xl:text-4xl 2xl:text-5xl">{formatMoney(stats.balance)}</p>
         <p className="mt-3 text-sm text-indigo-100 capitalize">{formatMonth(new Date())}</p>
       </section>
 
       {/* KPIs */}
-      <div className="grid grid-cols-2 gap-3">
-        <Kpi label="Revenus du mois" value={stats.kpis.income} change={stats.kpis.incomeChange} positiveIsGood color={INCOME} icon={ArrowDownIcon} />
-        <Kpi label="Dépenses du mois" value={stats.kpis.expense} change={stats.kpis.expenseChange} color={EXPENSE} icon={ArrowUpIcon} />
-      </div>
+      <Kpi label="Revenus du mois" value={stats.kpis.income} change={stats.kpis.incomeChange} positiveIsGood color={INCOME} icon={ArrowDownIcon} />
+      <Kpi label="Dépenses du mois" value={stats.kpis.expense} change={stats.kpis.expenseChange} color={EXPENSE} icon={ArrowUpIcon} />
 
       {/* Évolution 30 jours */}
-      <Card>
+      <Card className="col-span-2">
         <SectionTitle
           action={
             <div className="flex gap-3 text-xs font-medium">
@@ -58,7 +56,7 @@ export default function Dashboard() {
         >
           30 derniers jours
         </SectionTitle>
-        <div className="-ml-2 h-56 text-slate-400">
+        <div className="-ml-2 h-56 text-slate-400 lg:h-80">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={stats.series} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
               <defs>
@@ -83,7 +81,7 @@ export default function Dashboard() {
       </Card>
 
       {/* Répartition par catégorie */}
-      <Card>
+      <Card className="col-span-2 lg:col-span-1">
         <SectionTitle>Dépenses par catégorie</SectionTitle>
         {stats.byCategory.length === 0 ? (
           <p className="py-8 text-center text-sm text-slate-500">Aucune dépense ce mois-ci.</p>
@@ -93,15 +91,15 @@ export default function Dashboard() {
       </Card>
 
       {/* Dernières opérations */}
-      <Card>
+      <Card className="col-span-2 lg:col-span-1 xl:col-span-3">
         <SectionTitle action={<Link to="/transactions" className="text-sm font-semibold text-indigo-600 dark:text-indigo-400">Tout voir</Link>}>
           Récemment
         </SectionTitle>
         {transactions.length === 0 ? (
           <p className="py-6 text-center text-sm text-slate-500">Aucune transaction. Appuyez sur + pour commencer.</p>
         ) : (
-          <div className="-mx-2">
-            {transactions.slice(0, 5).map((t) => (
+          <div className="-mx-2 grid xl:grid-cols-2 xl:gap-x-4">
+            {transactions.slice(0, 6).map((t) => (
               <TransactionItem key={t.id} tx={t} budgetName={budgetName(t.budget_id)} onClick={() => openTx(t)} />
             ))}
           </div>
@@ -145,7 +143,7 @@ function CategoryBreakdown({ data, total }) {
   const shown = active !== null ? data[active] : null;
 
   return (
-    <div className="flex flex-col items-center gap-4 sm:flex-row">
+    <div className="flex flex-col items-center gap-4 sm:flex-row lg:flex-col">
       <div className="relative h-48 w-48 shrink-0">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
@@ -225,14 +223,12 @@ function Legend({ color, label }) {
 
 function DashboardSkeleton() {
   return (
-    <div className="space-y-4">
+    <div className="grid grid-cols-2 gap-3 lg:gap-5 xl:grid-cols-3">
+      <Skeleton className="col-span-2 h-36 rounded-3xl xl:col-span-1" />
       <Skeleton className="h-36 rounded-3xl" />
-      <div className="grid grid-cols-2 gap-3">
-        <Skeleton className="h-28 rounded-3xl" />
-        <Skeleton className="h-28 rounded-3xl" />
-      </div>
-      <Skeleton className="h-64 rounded-3xl" />
-      <Skeleton className="h-64 rounded-3xl" />
+      <Skeleton className="h-36 rounded-3xl" />
+      <Skeleton className="col-span-2 h-64 rounded-3xl" />
+      <Skeleton className="col-span-2 h-64 rounded-3xl lg:col-span-1" />
     </div>
   );
 }
