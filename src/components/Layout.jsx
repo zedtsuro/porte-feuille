@@ -17,7 +17,7 @@ const TITLES = { '/': 'Tableau de bord', '/transactions': 'Transactions', '/budg
 export default function Layout() {
   const location = useLocation();
   const { dark, toggle } = useTheme();
-  const { mode, error, clearError } = useData();
+  const { mode, status, error, clearError } = useData();
   // null = fermé ; {} = création ; {id,…} = édition ; {type,budget_id,…} = création pré-remplie
   const [txForm, setTxForm] = useState(null);
 
@@ -51,7 +51,17 @@ export default function Layout() {
 
       {/* key = pathname : rejoue l'animation d'entrée à chaque changement de route */}
       <main key={location.pathname} className="page-enter px-4 pb-32">
-        <Outlet context={{ openTx }} />
+        {status === 'error' ? (
+          <div className="rounded-3xl border border-rose-200 bg-rose-50 p-6 text-center text-rose-700 dark:border-rose-500/30 dark:bg-rose-500/10 dark:text-rose-300">
+            <p className="text-lg font-semibold">Connexion impossible</p>
+            <p className="mt-1 text-sm">Les données n'ont pas pu être chargées. Vérifiez la configuration Supabase (voir le README).</p>
+            <button onClick={() => window.location.reload()} className="mt-4 rounded-2xl bg-rose-600 px-4 py-2 text-sm font-semibold text-white">
+              Réessayer
+            </button>
+          </div>
+        ) : (
+          <Outlet context={{ openTx }} />
+        )}
       </main>
 
       {/* Barre de navigation basse + bouton d'ajout à portée de pouce */}

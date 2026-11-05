@@ -18,21 +18,27 @@ export function DataProvider({ children }) {
   }, []);
 
   useEffect(() => {
+    let cancelled = false;
     let unsubscribe = () => {};
     (async () => {
       try {
         await store.init();
         await refresh();
+        if (cancelled) return;
         setStatus('ready');
         // Temps réel : on recharge la table modifiée (autre onglet / autre appareil)
         unsubscribe = store.subscribe((table) => refresh(table).catch(() => {}));
       } catch (e) {
+        if (cancelled) return;
         console.error(e);
         setError(e.message ?? String(e));
         setStatus('error');
       }
     })();
-    return () => unsubscribe();
+    return () => {
+      cancelled = true;
+      unsubscribe();
+    };
   }, [refresh]);
 
   const run = useCallback(async (fn) => {

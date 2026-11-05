@@ -13,16 +13,25 @@ const uid = () => (crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Ma
 
 /* ----------------------------- Supabase ----------------------------- */
 
+let initPromise = null;
+
 const supabaseStore = {
   mode: 'supabase',
 
-  async init() {
-    const { data } = await supabase.auth.getSession();
-    if (!data.session) {
-      // Connexion anonyme : chaque appareil a son propre portefeuille, protégé par RLS.
-      const { error } = await supabase.auth.signInAnonymously();
-      if (error) throw error;
-    }
+  // Mémorisé : évite deux connexions anonymes concurrentes (StrictMode monte les effets deux fois).
+  init() {
+    initPromise ??= (async () => {
+      const { data } = await supabase.auth.getSession();
+      if (!data.session) {
+        // Connexion anonyme : chaque appareil a son propre portefeuille, protégé par RLS.
+        const { error } = await supabase.auth.signInAnonymously();
+        if (error) throw error;
+      }
+    })().catch((e) => {
+      initPromise = null; // autorise une nouvelle tentative
+      throw e;
+    });
+    return initPromise;
   },
 
   async list(table) {
